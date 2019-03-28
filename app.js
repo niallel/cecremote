@@ -7,41 +7,27 @@ const tv = require('./tv');
 
 app.get('/', (req, res) => res.send('CEC Remote'));
 
-app.get('/on', async (req, res) => {
+app.get('/tv/on', async (req, res) => {
     const result = await tv.powerOn();
     res.send('TV turned on');
 });
 
-app.get('/off', (req, res) => {
+app.get('/tv/off', (req, res) => {
     const result = tv.powerOff();
     res.send('TV turned off');
 });
 
-app.get('/hdmi1', async (req, res) => {
-    const result = await tv.powerOn();
-    monitor.WriteRawMessage('tx 4F:82:10:00');
-    res.send('TV source set to HDMI1');
+app.get('/tv/hdmi/:number', async (req, res) => {
+    await tv.powerOn();
+    const result = tv.changeHdmi(req.params.number);
+    if(result) {
+        res.send(`TV source set to HDMI${req.params.number}`);
+    } else {
+        res.send(`TV source set to HDMI uses a number of 1-9`);
+    }
 });
 
-app.get('/hdmi2', async (req, res) => {
-    const result = await tv.powerOn();
-    monitor.WriteRawMessage('tx 4F:82:20:00');
-    res.send('TV source set to HDMI2');
-});
-
-app.get('/hdmi3', async (req, res) => {
-    const result = await tv.powerOn();
-    monitor.WriteRawMessage('tx 4F:82:30:00');
-    res.send('TV source set to HDMI3');
-});
-
-app.get('/hdmi4', async (req, res) => {
-    const result = await tv.powerOn();
-    monitor.WriteRawMessage('tx 4F:82:40:00');
-    res.send('TV source set to HDMI4');
-});
-
-app.get('/tvpowerstatus', async (req, res) => {
+app.get('/tv/powerstatus', async (req, res) => {
     const result = await tv.getPowerStatus();
     res.send('TV power status is ' + result.data.str );
 });
