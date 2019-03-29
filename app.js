@@ -8,22 +8,25 @@ const tv = require('./tv');
 app.get('/', (req, res) => res.send('CEC Remote'));
 
 app.get('/tv/on', async (req, res) => {
+    console.log('Turning TV on');
     const result = await tv.powerOn();
     res.send('TV turned on');
 });
 
 app.get('/tv/off', (req, res) => {
+    console.log('Turning TV off');
     const result = tv.powerOff();
     res.send('TV turned off');
 });
 
 app.get('/tv/hdmi/:number', async (req, res) => {
+    console.log(`TV source set to HDMI${req.params.number}`);
     await tv.powerOn();
     const result = tv.changeHdmi(req.params.number);
     if(result) {
         res.send(`TV source set to HDMI${req.params.number}`);
     } else {
-        res.send(`TV source set to HDMI uses a number of 1-9`);
+        res.send(`TV source set to HDMI uses a number of 1-9, not ${req.params.number}`);
     }
 });
 
