@@ -70,7 +70,7 @@ function changeHdmi(number) {
         return(false);
     }
     else {
-        monitor.WriteRawMessage(`tx 4F:82:${number}0:00`);
+        monitor.WriteRawMessage(`tx 1F:82:${number}0:00`);
         return(true);
     }
 }
